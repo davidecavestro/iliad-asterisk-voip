@@ -1,0 +1,12 @@
+FROM alpine:latest
+RUN apk add --no-cache gettext
+WORKDIR /work
+COPY inject_cfg /work/
+ENTRYPOINT ["/work/inject_cfg"]
+
+# ENTRYPOINT ["sh", "-c"]
+# CMD ["for file in /templates/*; do \
+#         if [ -f \"$file\" ]; then \
+#             envsubst < \"$file\" > \"/target/$(basename $file)\"; \
+#         fi; \
+#      done"]

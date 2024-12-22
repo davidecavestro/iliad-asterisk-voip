@@ -1,0 +1,4 @@
+services:
+  asterisk:
+    build:
+      context: .

@@ -1,0 +1,12 @@
+services:
+  tts:
+    image: davidecavestro/iliad-asterisk-voip:latest
+    network_mode: host
+    restart: unless-stopped
+    entrypoint: festival
+    command: --server
+    volumes:
+    - ./config/festival.scm:/etc/festival.scm:ro
+    depends_on:
+        cfgmaker:
+            condition: service_completed_successfully

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+TARGET=/target
+TEMPLATES=/templates
+
+# List available environment variables with prefixes SECRET_
+VARS=$(env | awk -F= '/^(SECRET_)/ {print "$"$1}' | paste -sd, -)
+
+echo "Injecting values for: $VARS"
+
+for file in $TEMPLATES/*; do
+  echo "Detected template: $file"
+  if [ -f "$file" ]; then
+    echo "Processing template: $file"
+    envsubst "$VARS" < "$file" > "$TARGET/$(basename $file)";
+  fi;
+done

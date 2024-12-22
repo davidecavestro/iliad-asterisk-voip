@@ -1,0 +1,10 @@
+services:
+  asterisk:
+    image: davidecavestro/iliad-asterisk-voip:latest
+    network_mode: host
+    volumes:
+    - ./config:/etc/asterisk
+    - ./spool:/var/spool/asterisk
+    - ./log:/var/log/asterisk
+    - ./allarme.wav:/var/lib/asterisk/sounds/it/allarme.wav
+    restart: unless-stopped

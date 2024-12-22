@@ -1,0 +1,14 @@
+services:
+  cfgmaker:
+    build:
+      context: .
+      dockerfile: Dockerfile_cfg
+    container_name: cfgmaker
+    env_file: .env_cfg
+    volumes:
+    - ./templates:/templates
+    - ./config:/target
+  asterisk:
+    depends_on:
+        cfgmaker:
+            condition: service_completed_successfully
