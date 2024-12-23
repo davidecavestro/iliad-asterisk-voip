@@ -1,12 +1,27 @@
 services:
   tts:
-    image: davidecavestro/iliad-asterisk-voip:latest
+#    image: davidecavestro/iliad-asterisk-voip:latest
+    image: synesthesiam/opentts:it
     network_mode: host
     restart: unless-stopped
-    entrypoint: festival
-    command: --server
+#    entrypoint: festival
+#    command: --server
+#    environment:
+#    - PULSE_SERVER=localhost
+#    tty: true
+#    volumes:
+#    - ./config/festival.scm:/etc/festival.scm:ro
+#    - type: bind
+#      source: ~/.config/pulse
+#      target: /root/.config/pulse
+    # depends_on:
+    #     cfgmaker:
+    #         condition: service_completed_successfully
+  asterisk:
+    # environment:
+    # - PULSE_SERVER=localhost
     volumes:
-    - ./config/festival.scm:/etc/festival.scm:ro
-    depends_on:
-        cfgmaker:
-            condition: service_completed_successfully
+    - ./generate_tts.sh:/usr/local/bin/generate_tts.sh:ro
+    # - type: bind
+    #   source: ~/.config/pulse
+    #   target: /root/.config/pulse

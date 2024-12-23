@@ -54,6 +54,7 @@ RUN \
         --enable func_strings \
         --enable func_base64 \
         --enable func_uri \
+        --enable func_shell \
         --enable app_db \
         --enable app_dial \
         --enable app_echo \
@@ -163,29 +164,33 @@ RUN \
     && chmod -R 750 /var/spool/asterisk
 # Optional packages
 RUN \
-    && sed -i -e's/ main/ main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources \
-    && apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
         sendemail libnet-ssleay-perl \
-        libio-socket-ssl-perl libcap2-bin
-RUN \
-	apt-get install -y --no-install-recommends \
-        espeak-ng libespeak-ng-libespeak1 libespeak-ng-dev libespeak-ng-libespeak-dev espeak-ng-espeak speech-dispatcher-espeak-ng \
-        libsamplerate0-dev libsamplerate0 libsndfile1 libsndfile1-dev
-        # espeak libespeak-dev speech-dispatcher-espeak libespeak1 \
+        libio-socket-ssl-perl libcap2-bin curl sox
+# RUN \
+# 	apt-get install -y --no-install-recommends \
+#         espeak-ng libespeak-ng-libespeak1 libespeak-ng-dev libespeak-ng-libespeak-dev espeak-ng-espeak speech-dispatcher-espeak-ng \
+#         libsamplerate0-dev libsamplerate0 libsndfile1 libsndfile1-dev sox
+#         # espeak libespeak-dev speech-dispatcher-espeak libespeak1 \
 
 
+# RUN \
+#     sed -i -e's/ main/ main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources \
+#     && apt-get install -y \
+#         festival festvox-itapc16k festvox-italp16k
 
-# Download src
-RUN \
-    git clone --branch v5.0 --single-branch --depth 1 https://github.com/zaf/Asterisk-eSpeak.git /usr/local/src/espeak
 
-# Install asterisk
-WORKDIR /usr/local/src/espeak
+# # Download src
+# RUN \
+#     git clone --branch v5.0 --single-branch --depth 1 https://github.com/zaf/Asterisk-eSpeak.git /usr/local/src/espeak
 
-RUN \
-    make && make install
-RUN \
-    make samples
+# # Install asterisk
+# WORKDIR /usr/local/src/espeak
+
+# RUN \
+#     make && make install
+# RUN \
+#     make samples
 
 RUN \
     rm -rf /var/lib/apt/lists/*
@@ -195,7 +200,7 @@ EXPOSE 5060/udp 5061/udp 5062/udp
 STOPSIGNAL SIGTERM
 
 WORKDIR /var/lib/asterisk/
-HEALTHCHECK --interval=10s --timeout=10s --retries=3 CMD /usr/sbin/asterisk -rx "core show sysinfo"
+#HEALTHCHECK --interval=10s --timeout=10s --retries=3 CMD /usr/sbin/asterisk -rx "core show sysinfo"
 
 ENTRYPOINT ["/usr/sbin/asterisk","-f","-n","-Uasterisk","-Gdialout"]
 # ENTRYPOINT ["/usr/sbin/asterisk","-f","-n"]

@@ -6,5 +6,11 @@ services:
     - ./config:/etc/asterisk
     - ./spool:/var/spool/asterisk
     - ./log:/var/log/asterisk
-    - ./allarme.wav:/var/lib/asterisk/sounds/it/allarme.wav
+    # - ./allarme.wav:/var/lib/asterisk/sounds/it/allarme.wav
     restart: unless-stopped
+    healthcheck:
+      test: /usr/sbin/asterisk -rx "core show sysinfo"
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
