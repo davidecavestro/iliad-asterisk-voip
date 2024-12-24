@@ -16,8 +16,8 @@ At the moment the following features are available:
 Next steps:
 - review for security the generated config and image
 - optimize the generated image - just include useful stuff
-- optimize the generated image - as of now it uses many layers for ease of debugging, but wastes a lot of space
-- publish the optimised image
+- <s>optimize the generated image - as of now it uses many layers for ease of debugging, but wastes a lot of space</s>
+- <s>publish the image</s>
 - test support for incoming calls
 
 
