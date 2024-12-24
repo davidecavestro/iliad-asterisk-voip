@@ -7,7 +7,7 @@ services:
     - ./config:/etc/asterisk
     - ./spool:/var/spool/asterisk
     - ./log:/var/log/asterisk
-    # - ./allarme.wav:/var/lib/asterisk/sounds/it/allarme.wav # in case you want to mount some sounds
+    # - ./sounds/allarme.wav:/var/lib/asterisk/sounds/it/allarme.wav # in case you want to mount some sounds
     restart: unless-stopped
     healthcheck:
       test: /usr/sbin/asterisk -rx "core show sysinfo"

@@ -1,3 +1,4 @@
 .env_cfg
 config/*.conf
 config/*.scm
+sounds/*.wav
