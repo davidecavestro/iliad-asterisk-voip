@@ -23,6 +23,10 @@ jobs:
         with:
           driver-opts: image=moby/buildkit:latest
 
+      - name: Install docker-squash
+        run: |
+          pip install docker-squash
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -50,14 +54,25 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Install docker-squash
-        run: |
-          pip install docker-squash
+      - name: Setup jq
+        uses: dcarbone/install-jq-action@v3
+        with:
+          version: "1.7"
+          force: true
 
       - name: Squash the image
         run: |
           docker pull ghcr.io/${{ github.repository }}:${{ github.ref_name }}-huge && \
-          docker save ghcr.io/${{ github.repository }}:${{ github.ref_name }}-huge | docker-squash -t ghcr.io/${{ github.repository }}:${{ github.ref_name }} | docker load
+          docker pull debian:bookworm && \
+          FROM_LAYER=$(docker inspect --format='{{json .RootFS.Layers}}' ghcr.io/${{ github.repository }}:${{ github.ref_name }}-huge \
+            | jq -r --arg layer $(docker inspect --format='{{json .RootFS.Layers}}' debian:bookworm \
+            | jq -r '.[-1]') ' . as $layers | ($layers | index($layer) + 1) as $start | ($layers | length - $start)'\
+          ) && \
+          echo "FROM_LAYER: $FROM_LAYER" && \
+          docker-squash \
+            --from-layer $FROM_LAYER \
+            --tag ghcr.io/${{ github.repository }}:${{ github.ref_name }} \
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }}-huge
 
       - name: Push squashed image
         run: |
@@ -71,19 +86,6 @@ jobs:
           docker push ghcr.io/${{ github.repository }}:latest && \
           docker tag ghcr.io/${{ github.repository }}:${{ github.ref_name }} ${{ github.repository }}:latest && \
           docker push ${{ github.repository }}:latest
-        if: startsWith(github.ref, 'refs/tags/')
-
-      - name: Push latest image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
         if: startsWith(github.ref, 'refs/tags/')
 
       - name: Docker Hub Description
