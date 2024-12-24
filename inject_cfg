@@ -1,4 +1,5 @@
 #!/bin/sh
+# Generate config from templates
 
 TARGET=/target
 TEMPLATES=/templates

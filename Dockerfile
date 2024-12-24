@@ -1,6 +1,5 @@
 FROM debian:bookworm AS builder
 
-#ENV ASTERISK_VERSION=certified-20.7-cert3
 ENV ASTERISK_VERSION=22.1.0
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -16,11 +15,8 @@ RUN \
 WORKDIR /usr/local/src/asterisk
 RUN \
     yes | contrib/scripts/install_prereq install
-#RUN \
-#    contrib/scripts/install_prereq test
 RUN \
     ./bootstrap.sh && ./configure --with-format-mp3 --with-musiconhold --with-odbc --with-config-odbc --with-cdr-adaptive-odbc
-#    ./bootstrap.sh && ./configure CFLAGS=’-DPJ_HAS_IPV6=1’
 
 RUN \
         make menuselect.makeopts \
@@ -61,7 +57,6 @@ RUN \
         --enable app_exec \
         --enable app_mixmonitor \
         --enable app_originate \
-        --enable app_festival \
         --enable app_playback \
         --enable app_playtones \
         --enable app_sendtext \
@@ -167,30 +162,6 @@ RUN \
     apt-get install -y --no-install-recommends \
         sendemail libnet-ssleay-perl \
         libio-socket-ssl-perl libcap2-bin curl sox
-# RUN \
-# 	apt-get install -y --no-install-recommends \
-#         espeak-ng libespeak-ng-libespeak1 libespeak-ng-dev libespeak-ng-libespeak-dev espeak-ng-espeak speech-dispatcher-espeak-ng \
-#         libsamplerate0-dev libsamplerate0 libsndfile1 libsndfile1-dev sox
-#         # espeak libespeak-dev speech-dispatcher-espeak libespeak1 \
-
-
-# RUN \
-#     sed -i -e's/ main/ main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources \
-#     && apt-get install -y \
-#         festival festvox-itapc16k festvox-italp16k
-
-
-# # Download src
-# RUN \
-#     git clone --branch v5.0 --single-branch --depth 1 https://github.com/zaf/Asterisk-eSpeak.git /usr/local/src/espeak
-
-# # Install asterisk
-# WORKDIR /usr/local/src/espeak
-
-# RUN \
-#     make && make install
-# RUN \
-#     make samples
 
 RUN \
     rm -rf /var/lib/apt/lists/*
@@ -200,9 +171,7 @@ EXPOSE 5060/udp 5061/udp 5062/udp
 STOPSIGNAL SIGTERM
 
 WORKDIR /var/lib/asterisk/
-#HEALTHCHECK --interval=10s --timeout=10s --retries=3 CMD /usr/sbin/asterisk -rx "core show sysinfo"
 
 ENTRYPOINT ["/usr/sbin/asterisk","-f","-n","-Uasterisk","-Gdialout"]
-# ENTRYPOINT ["/usr/sbin/asterisk","-f","-n"]
 
 CMD ["-v"]
