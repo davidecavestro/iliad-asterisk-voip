@@ -47,7 +47,9 @@ In order to place calls:
 
 ### Prepare the env vars
 
-```.env .env_cfg
+```.env
+# filename: .env_cfg
+
 # Iliad VOIP phone number
 SECRET_PHONE_NUMBER=***********
 # Iliad VOIP password
@@ -123,7 +125,8 @@ cp .call-tts spool/.call && mv spool/.call spool/outgoing/.call
 
 #### Using TTS
 
-```.call .call-tts
+```.call
+# filename: .call-tts
 Channel: PJSIP/[callee_number]@Iliad
 CallerID: "Casa" <[caller_number]>
 Context: ttsme
@@ -138,6 +141,7 @@ SetVar: TTS_TEXT=This is an automatically generated alarm message
 #### Using a sound
 
 ```.call .call-sound
+# filename: .call-sound
 Channel: PJSIP/[callee_number]@Iliad
 CallerID: "Casa" <[caller_number]>
 Application: Playback
