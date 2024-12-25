@@ -147,9 +147,24 @@ RUN \
     && mv /etc/asterisk/* /opt/asterisk-samples/
 
 # Cleanup
-RUN \
-    make dist-clean \
-    && make clean
+# RUN \
+#     make dist-clean \
+#     && make clean
+
+FROM debian:bookworm
+
+COPY --from=builder /etc/asterisk /etc/asterisk
+COPY --from=builder /run/asterisk /run/asterisk
+COPY --from=builder /run/asterisk /run/asterisk
+COPY --from=builder /usr/lib/asterisk /usr/lib/asterisk
+COPY --from=builder /usr/lib/libasterisk* /usr/lib/
+COPY --from=builder /usr/sbin /usr/sbin
+COPY --from=builder /usr/share/man /usr/share/man
+COPY --from=builder /var/cache/asterisk /var/cache/asterisk
+COPY --from=builder /var/lib/asterisk /var/lib/asterisk
+COPY --from=builder /var/log/asterisk /var/log/asterisk
+COPY --from=builder /var/spool/asterisk /var/spool/asterisk
+COPY --from=builder /opt/asterisk-samples /opt/asterisk-samples
 
 # Postinstall
 RUN \
@@ -159,11 +174,16 @@ RUN \
     && chmod -R 750 /var/spool/asterisk
 # Optional packages
 RUN \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
         sendemail libnet-ssleay-perl \
-        libio-socket-ssl-perl libcap2-bin curl sox
-
-RUN \
+        libio-socket-ssl-perl libcap2-bin curl sox \
+        uuid libxml2 libxslt1.1 libresample1 libc-client2007e binutils libgsm1 doxygen zlib1g libsndfile1 \
+        libunbound8 libfftw3-bin libfftw3-single3 libcodec2-1.0 libsrtp2-1 libc-client2007e libspandsp2 gir1.2-ical-3.0 libical3 \
+        libpopt0 libnewt0.52 libcfg7 libcorosync-common4 libiksemel3 libcap2 libjack-jackd2-0 libradcli4 libbluetooth3 libssl3 \
+        liburiparser1 liblua5.2-0 libgmime-3.0-0 gir1.2-gmime-3.0 libneon27 libpq5 xmlstarlet bison flex \
+        libcurl4 libportaudio2 libportaudiocpp0 libasound2 libvorbis0a libvorbisenc2 libvorbisfile3 libogg0 libspeexdsp1 libspeex1 \
+    && \
     rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5060/udp 5061/udp 5062/udp
