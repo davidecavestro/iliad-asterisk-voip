@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2024-12-30
+### :sparkles: New Features
+- [`564b34b`](https://github.com/davidecavestro/iliad-asterisk-voip/commit/564b34b4f4e86fabb812cd9b897144030d24c9d1) - support multiarch optimized images *(commit by [@davidecavestro](https://github.com/davidecavestro))*
+
+
 ## [0.1.0] - 2024-12-24
 ### :bug: Bug Fixes
 - [`588d055`](https://github.com/davidecavestro/iliad-asterisk-voip/commit/588d055590a45d6fe003d13a8f2a415cc690954a) - add log and spool folder to version control *(commit by [@davidecavestro](https://github.com/davidecavestro))*
@@ -14,3 +19,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [`3a5edd6`](https://github.com/davidecavestro/iliad-asterisk-voip/commit/3a5edd687f762220a22473d54bfd62a48250681d) - enhance image build process *(commit by [@davidecavestro](https://github.com/davidecavestro))*
 
 [0.1.0]: https://github.com/davidecavestro/iliad-asterisk-voip/compare/0.0.1...0.1.0
+[0.2.0]: https://github.com/davidecavestro/iliad-asterisk-voip/compare/0.1.0...0.2.0
